@@ -67,7 +67,7 @@ void copy_big_int(const struct BigInt *from, struct BigInt *to);
 *** main() reads the base number from which the pyramid has to be calculated
 *** into an array of char. The max. length of this number is MAX_DIGITS.
 *** The number is checked to contain only digits. If not the program exits.
-*** Then the inputted number is converted into a big int by calling the
+*** Then inputted number is converted into a big int by calling the
 *** function strtobig_int().
 *** After the conversion the tower is calculated by calling the functions
 *** multiply(), print_big_int(), and copy_big_int() consecutively from 2 to
@@ -76,5 +76,55 @@ void copy_big_int(const struct BigInt *from, struct BigInt *to);
 */
 int main(int argc, char *argv[])
 {
+	char input[MAX_DIGITS];
+	struct BigInt big_int;
+	int count;
+
+	printf("Please enter a number: ");
+	scanf("%s",input);
+
+	for(count = 0; input[count] != '\0'; count++);
+
+	big_int.digits_count=strtobig_int(input,count,&big_int);
+
+	if(big_int.digits_count==count)
+	{
+			print_big_int(&big_int);
+	}
 	return 0;
+}
+
+int strtobig_int(const char *str, int len, struct BigInt *big_int)
+{
+	int count=0;
+
+	for (int i = len-1; i >=0 ; i--)
+	{
+		if(str[i]>='0'&&str[i]<='9')
+		{
+			big_int->the_int[count]=str[i]-'0';
+			count++;
+		}
+		else
+		{
+			return count;
+		}
+	}
+	return count;
+}
+
+void print_big_int(const struct BigInt *big_int)
+{
+	for (int i = big_int->digits_count-1; i >= 0; i--) {
+		printf("%d",big_int->the_int[i]);
+	}
+	printf("\n");
+}
+
+void multiply(const struct BigInt *big_int, int factor, struct BigInt *big_result)
+{
+	int overflow=0;
+	for (size_t i = 0; i < count; i++) {
+		/* code */
+	}
 }
