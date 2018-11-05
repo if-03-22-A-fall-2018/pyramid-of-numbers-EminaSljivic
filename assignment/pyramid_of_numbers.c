@@ -13,6 +13,7 @@
  * ----------------------------------------------------------
  */
 #include <stdio.h>
+#include <string.h>
 
 /// The maximum number of digits allowed in a big int.
 #define MAX_DIGITS 80
@@ -78,18 +79,29 @@ int main(int argc, char *argv[])
 {
 	char input[MAX_DIGITS];
 	struct BigInt big_int;
-	int count;
 
 	printf("Please enter a number: ");
 	scanf("%s",input);
 
-	for(count = 0; input[count] != '\0'; count++);
+	big_int.digits_count=strtobig_int(input,strlen(input),&big_int);
 
-	big_int.digits_count=strtobig_int(input,count,&big_int);
-
-	if(big_int.digits_count==count)
+	if(big_int.digits_count==strlen(input))
 	{
+		for (int i = 2; i <= 9; i++) {
 			print_big_int(&big_int);
+			multiply(&big_int,i,&big_int);
+			printf(" * %d = ",i);
+			print_big_int(&big_int);
+			printf("\n");
+		}
+
+		for (int i = 2; i <= 9; i++) {
+			print_big_int(&big_int);
+			divide(&big_int,i,&big_int);
+			printf(" / %d = ",i);
+			print_big_int(&big_int);
+			printf("\n");
+		}
 	}
 	return 0;
 }
@@ -118,13 +130,46 @@ void print_big_int(const struct BigInt *big_int)
 	for (int i = big_int->digits_count-1; i >= 0; i--) {
 		printf("%d",big_int->the_int[i]);
 	}
-	printf("\n");
 }
 
 void multiply(const struct BigInt *big_int, int factor, struct BigInt *big_result)
 {
 	int overflow=0;
-	for (size_t i = 0; i < count; i++) {
-		/* code */
+	int num;
+	for (int i = 0; i <big_int->digits_count; i++) {
+		num=big_int->the_int[i]*factor + overflow;
+		big_result->the_int[i]=num%10;
+
+		if(num>=10)
+		{
+			overflow=num/10;
+		}
+		else{
+			overflow=0;
+		}
+		if(overflow!=0 && i==big_int->digits_count-1)
+		{
+			big_result->digits_count++;
+		}
+	}
+}
+
+void divide(const struct BigInt *big_int, int divisor, struct BigInt *big_result)
+{
+	int num = 0;
+	int remainder = 0;
+	int counter = 0;
+
+	for (int i = big_int->digits_count-1; i >=0; i--)
+	{
+		num = big_int->the_int[i] + remainder*10 ;
+		big_result->the_int[i] = num/divisor;
+		remainder = num %divisor;
+		counter += big_result->the_int[i];
+
+		if (counter == 0)
+		{
+			big_result->digits_count--;
+		}
 	}
 }
